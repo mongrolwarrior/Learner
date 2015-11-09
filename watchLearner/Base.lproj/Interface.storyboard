@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="9019"/>
+    </dependencies>
+    <scenes>
+        <!--Interface Controller-->
+        <scene sceneID="aou-V4-d1y">
+            <objects>
+                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="watchLearner" customModuleProvider="target">
+                    <items>
+                        <button width="1" alignment="left" title="Show Answer" id="DLu-XW-4qt">
+                            <connections>
+                                <action selector="showAnswerButtonAction" destination="AgC-eL-Hgc" id="SDV-9q-7D1"/>
+                            </connections>
+                        </button>
+                        <label alignment="left" id="fyM-l0-eCv"/>
+                        <label alignment="left" hidden="YES" id="HRv-lb-aLB"/>
+                        <imageView alignment="left" id="lFk-9x-qTT"/>
+                    </items>
+                    <connections>
+                        <outlet property="answerLabel" destination="HRv-lb-aLB" id="xVt-Ut-dDP"/>
+                        <outlet property="questionImage" destination="lFk-9x-qTT" id="GFf-h8-DJa"/>
+                        <outlet property="questionLabel" destination="fyM-l0-eCv" id="VQg-fa-9te"/>
+                        <outlet property="showAnswerButton" destination="DLu-XW-4qt" id="9DA-2l-v9O"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="220" y="345"/>
+        </scene>
+        <!--Learner-->
+        <scene sceneID="AEw-b0-oYE">
+            <objects>
+                <notificationController id="YCC-NB-fut" userLabel="Learner">
+                    <items>
+                        <label alignment="left" text="Answer Question" id="IdU-wH-bcW"/>
+                    </items>
+                    <notificationCategory key="notificationCategory" identifier="myCategory" id="JfB-70-Muf"/>
+                    <connections>
+                        <outlet property="notificationAlertLabel" destination="IdU-wH-bcW" id="JKC-fr-R95"/>
+                    </connections>
+                </notificationController>
+            </objects>
+            <point key="canvasLocation" x="220" y="643"/>
+        </scene>
+    </scenes>
+</document>

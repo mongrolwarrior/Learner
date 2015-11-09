@@ -4,15 +4,35 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Complication - watchLearner.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
 		<key>Learner.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>Notification - watchLearner.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>watchLearner.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>35CFD7121BECF1690039A868</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>35E452F31BF069F600C1674C</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -8,13 +8,58 @@
 
 import UIKit
 import CoreData
+import WatchConnectivity
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
 
     var window: UIWindow?
-
-
+    
+    lazy var earliestActiveQuestionPredicate: NSPredicate = {
+        var predicate = NSPredicate(format: "current = YES AND lastanswered<= %@", NSDate(timeIntervalSinceNow: -3600))
+        return predicate
+        
+    }()
+    
+    private func setupWatchConnectivity() {
+        // 1
+        if WCSession.isSupported() {
+        // 2
+        let session = WCSession.defaultSession()
+        // 3
+        session.delegate = self
+        // 4
+        session.activateSession()
+        }
+    }
+    
+    func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
+        var questions = [Questions]()
+        let request = NSFetchRequest(entityName: "Questions")
+        request.predicate = earliestActiveQuestionPredicate
+        request.sortDescriptors = [NSSortDescriptor(key: "nextdue", ascending: true)]
+        do {
+        questions = try managedObjectContext.executeFetchRequest(request) as! [Questions]
+        } catch _ as NSError {
+            print("getRequest error")
+        }
+        var reply = [String: AnyObject]()
+        if questions[0].question != nil {
+            reply["question"] = questions[0].question!
+        }
+        if questions[0].answer != nil {
+            reply["answer"] = questions[0].answer!
+        }
+        if questions[0].aPictureName != nil {
+            reply["aImage"] = questions[0].aPictureName!
+        }
+        if questions[0].qPictureName != nil {
+            reply["qImage"] = questions[0].qPictureName!
+        }
+        
+        replyHandler(reply)
+    }
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
@@ -22,6 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         viewController.managedContext = managedObjectContext
         
         application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: [.Sound, .Alert, .Badge], categories: nil))
+        
+        self.setupWatchConnectivity()
         
         return true
     }
