@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9057" systemVersion="15B42" minimumToolsVersion="Automatic">
+    <entity name="AnswerLog" representedClassName=".AnswerLog" syncable="YES">
+        <attribute name="accuracy" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="dateanswered" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="qid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="Questions" representedClassName=".Questions" syncable="YES">
+        <attribute name="answer" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="aPicture" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="aPictureName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="aSound" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="correction" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="current" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="datecreated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastanswered" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="nextdue" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="qid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="qPicture" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="qPictureName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="qSound" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Users" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="AnswerLog" positionX="-18" positionY="27" width="128" height="90"/>
+        <element name="Questions" positionX="36" positionY="81" width="128" height="255"/>
+        <element name="Users" positionX="9" positionY="54" width="128" height="75"/>
+    </elements>
+</model>
