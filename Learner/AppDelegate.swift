@@ -33,31 +33,168 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         }
     }
     
-    func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
+    func recordAnswer(qid: Int32, accuracy: Bool) -> NSDate {
         var questions = [Questions]()
         let request = NSFetchRequest(entityName: "Questions")
-        request.predicate = earliestActiveQuestionPredicate
-        request.sortDescriptors = [NSSortDescriptor(key: "nextdue", ascending: true)]
+        request.predicate = NSPredicate(format: "qid = %d", qid)
         do {
-        questions = try managedObjectContext.executeFetchRequest(request) as! [Questions]
+            questions = try managedObjectContext.executeFetchRequest(request) as! [Questions]
         } catch _ as NSError {
             print("getRequest error")
         }
-        var reply = [String: AnyObject]()
-        if questions[0].question != nil {
-            reply["question"] = questions[0].question!
-        }
-        if questions[0].answer != nil {
-            reply["answer"] = questions[0].answer!
-        }
-        if questions[0].aPictureName != nil {
-            reply["aImage"] = questions[0].aPictureName!
-        }
-        if questions[0].qPictureName != nil {
-            reply["qImage"] = questions[0].qPictureName!
+        let currentQuestion = questions[0]
+        
+        let entity = NSEntityDescription.entityForName("AnswerLog", inManagedObjectContext: managedObjectContext)
+        let answerLog = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedObjectContext)
+        
+        answerLog.setValue(currentQuestion.qid, forKey: "qid")
+        answerLog.setValue(NSDate(), forKey: "dateanswered")
+        answerLog.setValue(accuracy, forKey: "accuracy")
+        
+        do {
+            try managedObjectContext.save()
+        } catch let error as NSError {
+            print("Couldn't save \(error), \(error.userInfo)")
         }
         
-        replyHandler(reply)
+        let correctionConstant = currentQuestion.correction ?? 0.0  // "Nil coalescing operator" assigns the left hand side if the conditional is not nil, or the right hand side
+        var dateLatency: NSTimeInterval = currentQuestion.nextdue!.timeIntervalSinceNow
+        var timeToNextDue = NSTimeInterval()
+        
+        if let dateTime = currentQuestion.lastanswered?.timeIntervalSinceNow {
+            if accuracy {
+                timeToNextDue = fmax((2.0-correctionConstant.doubleValue), 1.1) *  fabs(dateTime)
+             //   changeNextDue(NSDate(timeIntervalSinceNow:fmax((2.0-correctionConstant.doubleValue), 1.1) *  fabs(dateTime)))
+            } else {
+                timeToNextDue = fabs(dateTime)*0.1
+            //    changeNextDue(NSDate(timeIntervalSinceNow:fabs(dateTime)*0.1))
+            }
+        } else {
+            timeToNextDue = 600
+//            changeNextDue(NSDate(timeIntervalSinceNow: 600))
+        }
+        
+        
+        do {
+            currentQuestion.nextdue = NSDate(timeIntervalSinceNow: timeToNextDue)
+            currentQuestion.lastanswered = NSDate()
+            try managedObjectContext.save()
+        } catch _ as NSError {
+            print("getRequest error")
+        }
+        
+        if dateLatency < -18000 {
+            dateLatency = 300.0
+        } else if dateLatency < 0 {
+            dateLatency = 600 + dateLatency/60
+        } else if dateLatency < 7200 {
+            dateLatency = 600 + dateLatency/6
+        } else {
+            dateLatency = 1800
+       //     triggerNewQuestion()
+        }
+        scheduleLocal(self, timeToSend: dateLatency)
+   //     self.updateCurrentQuestion(accuracy)
+     //   setQuestion()
+        return NSDate(timeIntervalSinceNow: timeToNextDue) // NSDate(timeIntervalSinceNow: timeToNextDue)
+    }
+    
+    func scheduleLocal(sender: AnyObject, timeToSend: NSTimeInterval) {
+        let settings = UIApplication.sharedApplication().currentUserNotificationSettings()
+        
+        if settings!.types == .None {
+            let ac = UIAlertController(title: "Can't schedule", message: "Either we don't have permission to schedule notifications, or we haven't asked yet.", preferredStyle: .Alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            let navigationController = window!.rootViewController as! UINavigationController
+            
+            let activeViewCont = navigationController.visibleViewController
+            
+            activeViewCont!.presentViewController(ac, animated: true, completion: nil)
+            return
+        }
+        
+        let notification = UILocalNotification()
+        notification.fireDate = NSDate(timeIntervalSinceNow: timeToSend)
+        notification.alertBody = "Answer question"
+        notification.alertAction = "Answer question"
+        notification.soundName = UILocalNotificationDefaultSoundName
+        UIApplication.sharedApplication().scheduleLocalNotification(notification)
+    }
+    
+    func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
+        var questions = [Questions]()
+        var reply = [String: AnyObject]()
+        let request = NSFetchRequest(entityName: "Questions")
+        
+        
+        let messageType = message["messageType"] as? String
+        
+        var tester = "this"
+        if !(messageType == nil) {
+            if !messageType!.isEmpty {
+                switch messageType! {
+                    case "sendAnswer":
+                        let qid = message["qid"] as! NSNumber
+                        request.predicate = NSPredicate(format: "qid = %d", qid.intValue)
+                        do {
+                            questions = try managedObjectContext.executeFetchRequest(request) as! [Questions]
+                        } catch _ as NSError {
+                            print("getRequest error")
+                        }
+                        if !questions.isEmpty {
+                            let accuracy = message["accuracy"] as! Bool
+                            reply["nextdue"] = self.recordAnswer(qid.intValue, accuracy: accuracy).formatted //questions[0].nextdue!.formatted
+                        } else {
+                            reply["nextdue"] = "nil"
+                    }
+                    
+                    case "getQuestion":
+                        request.predicate = earliestActiveQuestionPredicate
+                        request.sortDescriptors = [NSSortDescriptor(key: "nextdue", ascending: true)]
+                        do {
+                            questions = try managedObjectContext.executeFetchRequest(request) as! [Questions]
+                        } catch _ as NSError {
+                            print("getRequest error")
+                        }
+                        
+                        if questions[0].qid != nil {
+                            reply["qid"] = questions[0].qid!
+                        }
+                        if questions[0].question != nil {
+                            reply["question"] = questions[0].question!
+                        }
+                        if questions[0].answer != nil {
+                            reply["answer"] = questions[0].answer!
+                        }
+                        if questions[0].aPictureName != nil {
+                            if !questions[0].aPictureName!.isEmpty {
+                                tester = "second"
+                                reply["aImage"] = questions[0].aPictureName!
+                            } else {
+                                tester = "third"
+                                reply["aImage"] = ""
+                            }
+                        } else {
+                            reply["aImage"] = ""
+                        }
+                        if questions[0].qPictureName != nil {
+                            if !questions[0].qPictureName!.isEmpty {
+                                reply["qImage"] = questions[0].qPictureName!
+                            } else {
+                                reply["qImage"] = ""
+                            }
+                        } else {
+                            reply["qImage"] = ""
+                    }
+                default:
+                    print("default")
+                }
+            }
+        }
+        
+ //       let replytemp = ["question":reply["question"]!, "answer":reply["answer"]!, "aImage": tester, "qImage":"qImage", "qid": questions[0].qid!]//NSNumber(int: 1)]
+        
+       replyHandler(reply)
     }
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
