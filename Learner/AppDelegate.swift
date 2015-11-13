@@ -21,6 +21,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         
     }()
     
+    lazy var earliestActiveQuestionWithoutSoundPredicate: NSPredicate = {
+        var predicate = NSPredicate(format: "current = YES AND qSound == '' AND aSound == '' AND lastanswered<= %@", NSDate(timeIntervalSinceNow: -3600))
+        return predicate
+        
+    }()
+    
     private func setupWatchConnectivity() {
         // 1
         if WCSession.isSupported() {
@@ -129,7 +135,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         
         let messageType = message["messageType"] as? String
         
-        var tester = "this"
         if !(messageType == nil) {
             if !messageType!.isEmpty {
                 switch messageType! {
@@ -168,10 +173,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                         }
                         if questions[0].aPictureName != nil {
                             if !questions[0].aPictureName!.isEmpty {
-                                tester = "second"
                                 reply["aImage"] = questions[0].aPictureName!
                             } else {
-                                tester = "third"
                                 reply["aImage"] = ""
                             }
                         } else {
@@ -185,7 +188,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
                             }
                         } else {
                             reply["qImage"] = ""
-                    }
+                    }/*
+                        reply["qid"] = NSNumber(int: 1)
+                        reply["question"] = "question"
+                        reply["answer"] = "answer"
+                    reply["aImage"] = "aImage"
+                    reply["qImage"] = "qImage"
+                    */
                 default:
                     print("default")
                 }

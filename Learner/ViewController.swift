@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIPopoverPresentationControllerDelegate {
     
     var managedContext: NSManagedObjectContext!
  //   var currentQuestions = [NSManagedObject]()
@@ -29,7 +29,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var questionImageView: UIImageView!
     @IBOutlet weak var questionLabel: UILabel!
-    @IBOutlet weak var answerImageView: UIImageView!
+    
     @IBOutlet weak var answerLabel: UILabel!
     
     override func viewDidLoad() {
@@ -50,6 +50,11 @@ class ViewController: UIViewController {
         view.addGestureRecognizer(doubleTapGesture)
         
         tapGesture.requireGestureRecognizerToFail(doubleTapGesture)
+        
+        let cSelector : Selector = "displayAnswer:"
+        let twoTapGesture = UITapGestureRecognizer(target: self, action: cSelector)
+        twoTapGesture.numberOfTouchesRequired = 2
+        view.addGestureRecognizer(twoTapGesture)
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: "respondToSwipeGesture:")
         swipeRight.direction = UISwipeGestureRecognizerDirection.Right
@@ -84,31 +89,45 @@ class ViewController: UIViewController {
     }
     
     func toggleAnswer(sender: AnyObject) {
-        answerLabel.hidden = !answerLabel.hidden
-        if answerImageView.image != nil {
-            answerImageView.hidden = !answerImageView.hidden
+        if currentQuestion.aPictureName != nil {
+            if !currentQuestion.aPictureName!.isEmpty {
+                questionImageView.image = UIImage(named: currentQuestion.aPictureName!)
+                questionImageView.hidden = !questionImageView.hidden
+            }
+        }
+        if currentQuestion.answer != nil {
+            if !currentQuestion.answer!.isEmpty {
+                if answerLabel.text == "" {
+                    answerLabel.text = currentQuestion.answer!
+                } else {
+                    answerLabel.text = ""
+                }
+            }
         }
     }
     
     func setQuestion() {
-        questionLabel.text = currentQuestion.question
-        answerLabel.text = currentQuestion.answer
-        answerLabel.hidden = true
+        answerLabel.text = ""
+        if currentQuestion.question != nil {
+            if !currentQuestion.question!.isEmpty {
+                questionLabel.text = currentQuestion.question!
+            }
+        }
         
         questionImageView.image = nil
         questionImageView.hidden = true
-        answerImageView.image = nil
-        answerImageView.hidden = true
-        if !(currentQuestion.qPictureName == nil) {
+        if currentQuestion.qPictureName != nil {
             if !currentQuestion.qPictureName!.isEmpty {
+                print(currentQuestion.qPictureName!)
                 questionImageView.hidden = false
-                questionImageView.image = UIImage(contentsOfFile: fileInDocumentsDirectory(currentQuestion.qPictureName!))
+                questionImageView.image = UIImage(named: currentQuestion.qPictureName!)
             }
         }
     
-        if !(currentQuestion.aPictureName == nil) {
+        if currentQuestion.aPictureName != nil {
             if !currentQuestion.aPictureName!.isEmpty {
-                answerImageView.image = UIImage(contentsOfFile: fileInDocumentsDirectory(currentQuestion.aPictureName!))
+                questionImageView.hidden = false
+                questionImageView.image = UIImage(contentsOfFile: fileInDocumentsDirectory(currentQuestion.aPictureName!))
             }
         }
     }
@@ -130,7 +149,9 @@ class ViewController: UIViewController {
         } catch _ as NSError {
             print("getRequest error")
         }
+        print(questions[0].question)
         currentQuestion = questions[0]
+        print(currentQuestion.question)
     }
     
     func respondToSwipeGesture(gesture: UIGestureRecognizer) {
@@ -275,6 +296,32 @@ class ViewController: UIViewController {
         notification.alertAction = "Answer question"
         notification.soundName = UILocalNotificationDefaultSoundName
         UIApplication.sharedApplication().scheduleLocalNotification(notification)
+    }
+    
+    func displayAnswer(sender: AnyObject) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let contentViewController = storyboard.instantiateViewControllerWithIdentifier("ModalController") as! ModalController
+        
+        contentViewController.answerText = currentQuestion.answer!
+        
+        contentViewController.modalPresentationStyle = UIModalPresentationStyle.Popover // 2
+        let detailPopover: UIPopoverPresentationController = contentViewController.popoverPresentationController!
+        
+        detailPopover.sourceView = answerLabel
+        detailPopover.permittedArrowDirections = UIPopoverArrowDirection.Any
+        detailPopover.delegate = self
+        presentViewController(contentViewController, animated: true, completion:nil) // 4
+    }
+    
+    // #pragma mark - UIAdaptivePresentationControllerDelegate
+    func adaptivePresentationStyleForPresentationController( controller: UIPresentationController!) -> UIModalPresentationStyle {
+        return UIModalPresentationStyle.None
+    }
+    
+    func presentationController(controller: UIPresentationController!, viewControllerForAdaptivePresentationStyle style: UIModalPresentationStyle) -> UIViewController! {
+        let navController = UINavigationController(rootViewController: controller.presentedViewController)
+        
+        return navController
     }
 }
 

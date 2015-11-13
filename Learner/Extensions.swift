@@ -19,7 +19,7 @@ extension String {
 extension NSDate {
     var formatted:String {
         let formatter = NSDateFormatter()
-        formatter.dateFormat = "dd/M/yyyy, H:mm"
+        formatter.dateFormat = "dd/M/yyyy - H:mm"
         return formatter.stringFromDate(self)
     }
     func formattedWith(format:String) -> String {
@@ -32,7 +32,7 @@ extension NSDate {
 extension String {
     var asDate:NSDate! {
         let styler = NSDateFormatter()
-        styler.dateFormat = "dd/M/yyyy, H:mm"
+        styler.dateFormat = "dd/M/yyyy - H:mm"
         return styler.dateFromString(self)!
     }
     func asDateFormattedWith(format:String) -> NSDate! {

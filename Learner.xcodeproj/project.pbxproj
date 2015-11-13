@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3500B5321BF2C8000087794B /* 5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3500B5311BF2C8000087794B /* 5.mp3 */; };
 		35174F741BEE1C10005A0DD5 /* AnswerLog+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35174F721BEE1C10005A0DD5 /* AnswerLog+CoreDataProperties.swift */; };
 		35174F751BEE1C10005A0DD5 /* AnswerLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35174F731BEE1C10005A0DD5 /* AnswerLog.swift */; };
+		35A431471BF5F44000831687 /* ModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A431461BF5F44000831687 /* ModalController.swift */; };
 		35CFD7171BECF1690039A868 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CFD7161BECF1690039A868 /* AppDelegate.swift */; };
 		35CFD7191BECF1690039A868 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CFD7181BECF1690039A868 /* ViewController.swift */; };
 		35CFD71C1BECF1690039A868 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35CFD71A1BECF1690039A868 /* Main.storyboard */; };
@@ -72,8 +74,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3500B5311BF2C8000087794B /* 5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 5.mp3; sourceTree = "<group>"; };
 		35174F721BEE1C10005A0DD5 /* AnswerLog+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AnswerLog+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		35174F731BEE1C10005A0DD5 /* AnswerLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerLog.swift; sourceTree = "<group>"; };
+		35A431461BF5F44000831687 /* ModalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalController.swift; sourceTree = "<group>"; };
 		35CFD7131BECF1690039A868 /* Learner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Learner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35CFD7161BECF1690039A868 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		35CFD7181BECF1690039A868 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -148,6 +152,7 @@
 				35CFD7181BECF1690039A868 /* ViewController.swift */,
 				35CFD72F1BED9EFE0039A868 /* Extensions.swift */,
 				35CFD71A1BECF1690039A868 /* Main.storyboard */,
+				35A431461BF5F44000831687 /* ModalController.swift */,
 				35CFD7201BECF1690039A868 /* Assets.xcassets */,
 				35CFD7221BECF1690039A868 /* LaunchScreen.storyboard */,
 				35CFD7251BECF1690039A868 /* Info.plist */,
@@ -183,6 +188,7 @@
 		35E453051BF069F600C1674C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3500B5311BF2C8000087794B /* 5.mp3 */,
 				35E453061BF069F600C1674C /* PushNotificationPayload.apns */,
 			);
 			name = "Supporting Files";
@@ -309,6 +315,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3500B5321BF2C8000087794B /* 5.mp3 in Resources */,
 				35E453101BF069F600C1674C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,6 +331,7 @@
 				35CFD7191BECF1690039A868 /* ViewController.swift in Sources */,
 				35CFD7301BED9EFE0039A868 /* Extensions.swift in Sources */,
 				35CFD7171BECF1690039A868 /* AppDelegate.swift in Sources */,
+				35A431471BF5F44000831687 /* ModalController.swift in Sources */,
 				35174F751BEE1C10005A0DD5 /* AnswerLog.swift in Sources */,
 				35CFD71F1BECF1690039A868 /* Learner.xcdatamodeld in Sources */,
 				35CFD72E1BECF2F20039A868 /* Questions.swift in Sources */,
@@ -580,6 +588,7 @@
 				35E453181BF069F600C1674C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		35E4531B1BF069F600C1674C /* Build configuration list for PBXNativeTarget "watchLearner" */ = {
 			isa = XCConfigurationList;
@@ -588,6 +597,7 @@
 				35E453161BF069F600C1674C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

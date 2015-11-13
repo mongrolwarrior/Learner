@@ -24,6 +24,8 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     @IBOutlet var nextDueDate: WKInterfaceLabel!
     @IBOutlet var nextDueTimer: WKInterfaceTimer!
     
+    var player: WKAudioFilePlayer!
+    
     func sendAnswerToiPhone(accuracy: Bool) {
         if (WCSession.isSupported()) {
             session = WCSession.defaultSession()
@@ -50,6 +52,24 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
             }
         )
         getQuestionFromiPhone()
+    }
+    
+    @IBAction func playSound() {
+    /*    let myBundle = NSBundle.mainBundle()
+        let soundFile = myBundle.URLForResource("5", withExtension: "mp3")
+        
+        let options: [NSObject: AnyObject] = [WKMediaPlayerControllerOptionsAutoplayKey : true]
+        presentMediaPlayerControllerWithURL(soundFile!, options: options) { (didEndPlay: Bool, endTime: NSTimeInterval, error: NSError?) -> Void in
+            // 3
+            print("Finished playing \(soundFile!.URL.lastPathComponent). Did end play? \(didEndPlay). Error?\(error?.localizedDescription)")
+        }
+      */
+        let filePath = NSBundle.mainBundle().pathForResource("5", ofType: "mp3")!
+        let fileUrl = NSURL.fileURLWithPath(filePath)
+        let asset = WKAudioFileAsset(URL: fileUrl)
+        let playerItem = WKAudioFilePlayerItem(asset: asset)
+        player = WKAudioFilePlayer(playerItem: playerItem)
+        player.play()
     }
     
     @IBAction func onCorrectAnswer() {
@@ -142,24 +162,6 @@ class InterfaceController: WKInterfaceController, WCSessionDelegate {
     func setNextDueDisplay(nextDue: String) {
         self.nextDueDate.setHidden(false)
         self.nextDueDate.setText(nextDue)
-        /*
-        if !answer.isEmpty {
-            self.answerLabel.setText(answer)
-        }
-        if !qImage.isEmpty {
-            var qImageNew = qImage.stringByReplacingOccurrencesOfString(".svg", withString: "")
-            qImageNew = qImageNew.stringByReplacingOccurrencesOfString(".gif", withString: "")
-            questionImage.setImageNamed(qImageNew)
-            questionImage.setHidden(false)
-        }
-        if !aImage.isEmpty {
-            var aImageNew = aImage.stringByReplacingOccurrencesOfString(".svg", withString: "")
-            aImageNew = aImageNew.stringByReplacingOccurrencesOfString(".gif", withString: "")
-            questionImage.setImageNamed(aImageNew)
-            questionImage.setHidden(true)
-        }
-        self.answerLabel.setHidden(true)
-        answerIsHidden = true */
     }
 
     override func didDeactivate() {
