@@ -8,59 +8,32 @@
         <!--Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="watchLearner" customModuleProvider="target">
-                    <items>
-                        <button width="1" alignment="left" title="Show Answer" id="DLu-XW-4qt">
-                            <connections>
-                                <action selector="showAnswerButtonAction" destination="AgC-eL-Hgc" id="SDV-9q-7D1"/>
-                            </connections>
-                        </button>
-                        <label alignment="left" numberOfLines="0" id="fyM-l0-eCv"/>
-                        <label alignment="left" hidden="YES" numberOfLines="0" id="HRv-lb-aLB"/>
-                        <imageView alignment="left" id="lFk-9x-qTT"/>
-                        <label alignment="left" hidden="YES" text="Label" id="EFe-1S-c38" userLabel="Next Due Date"/>
-                        <timer alignment="left" hidden="YES" id="peb-uf-tH8"/>
-                    </items>
-                    <menu key="menu" id="EWX-d7-lfn">
-                        <items>
-                            <menuItem title="Correct" icon="accept" id="I57-2X-1wv">
-                                <connections>
-                                    <action selector="onCorrectAnswer" destination="AgC-eL-Hgc" id="kpS-J9-Ua7"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Incorrect" icon="decline" id="tMQ-zu-Vci">
-                                <connections>
-                                    <action selector="onIncorrectAnswer" destination="AgC-eL-Hgc" id="6qR-EV-w4s"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
-                    <connections>
-                        <outlet property="answerLabel" destination="HRv-lb-aLB" id="xVt-Ut-dDP"/>
-                        <outlet property="nextDueDate" destination="EFe-1S-c38" id="fq3-QO-dTW"/>
-                        <outlet property="nextDueTimer" destination="peb-uf-tH8" id="g7e-hP-tXM"/>
-                        <outlet property="questionImage" destination="lFk-9x-qTT" id="GFf-h8-DJa"/>
-                        <outlet property="questionLabel" destination="fyM-l0-eCv" id="VQg-fa-9te"/>
-                        <outlet property="showAnswerButton" destination="DLu-XW-4qt" id="9DA-2l-v9O"/>
-                    </connections>
-                </controller>
+                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="watchLearner" customModuleProvider="target"/>
             </objects>
             <point key="canvasLocation" x="220" y="345"/>
         </scene>
-        <!--Learner-->
+        <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">
             <objects>
-                <notificationController id="YCC-NB-fut" userLabel="Learner">
+                <notificationController id="YCC-NB-fut">
                     <items>
-                        <label alignment="left" text="Answer Question" id="IdU-wH-bcW"/>
+                        <label alignment="left" text="Alert Label" id="IdU-wH-bcW"/>
                     </items>
                     <notificationCategory key="notificationCategory" identifier="myCategory" id="JfB-70-Muf"/>
                     <connections>
                         <outlet property="notificationAlertLabel" destination="IdU-wH-bcW" id="JKC-fr-R95"/>
+                        <segue destination="4sK-HA-Art" kind="relationship" relationship="dynamicNotificationInterface" id="kXh-Jw-8B1"/>
                     </connections>
                 </notificationController>
             </objects>
             <point key="canvasLocation" x="220" y="643"/>
+        </scene>
+        <!--Notification Controller-->
+        <scene sceneID="ZPc-GJ-vnh">
+            <objects>
+                <controller id="4sK-HA-Art" customClass="NotificationController" customModule="watchLearner" customModuleProvider="target"/>
+            </objects>
+            <point key="canvasLocation" x="468" y="643"/>
         </scene>
     </scenes>
 </document>
